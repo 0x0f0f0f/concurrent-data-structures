@@ -2,6 +2,7 @@
 #define LOGGER_H
 
 #include <pthread.h>
+#include <stdarg.h>
 
 enum loglevel {
 	LOG_LVL_CRITICAL, // 0
@@ -23,16 +24,16 @@ static char* logname(enum loglevel l) {
 #define LOGFILE stderr
 #endif
 
-#define LOG(level, ...) { if(level <= LOG_LVL) {\
-    fprintf(LOGFILE, "[ %s ]: ", logname(level));\
-	fflush(stderr);\
-	fprintf(LOGFILE, __VA_ARGS__); fflush(stderr); }}
+
+#define LOG(level, fmt, args...) { if(level <= LOG_LVL) {\
+    fprintf(LOGFILE, "[ %s - %s():%d ] "fmt, logname(level), __func__, __LINE__, ##args);\
+	fflush(stderr); }}
 
 
-#define LOG_CRITICAL(...) LOG(LOG_LVL_CRITICAL, __VA_ARGS__)
-#define LOG_WARNING(...) LOG(LOG_LVL_WARNING, __VA_ARGS__)
-#define LOG_NOTICE(...) LOG(LOG_LVL_NOTICE, __VA_ARGS__)
-#define LOG_DEBUG(...) LOG(LOG_LVL_DEBUG, __VA_ARGS__)
+#define LOG_CRITICAL(args...) LOG(LOG_LVL_CRITICAL, args)
+#define LOG_WARNING(args...) LOG(LOG_LVL_WARNING, args)
+#define LOG_NOTICE(args...) LOG(LOG_LVL_NOTICE, args)
+#define LOG_DEBUG(args...) LOG(LOG_LVL_DEBUG, args)
 
 #endif
 

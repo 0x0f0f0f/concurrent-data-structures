@@ -2,8 +2,10 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <logger.h>
+
 /* Print to stderr */
-#define ERR(...) fprintf(stderr, __VA_ARGS__);
+#define ERR(...) LOG_CRITICAL(__VA_ARGS__);
 
 /* Print an error and die */
 #define ERR_DIE(...) ERR(__VA_ARGS__);\
@@ -60,5 +62,18 @@
     if((err = pthread_cond_wait(e, m)) != 0) {\
         LOG_CRITICAL("error waiting condition %p\n", (void*) e);\
         return err;}
+
+/* Run a syscall, store the result and die on fail*/
+#define SYSCALL(result, call, msg) \
+    if((result = call) == -1) \
+    { int e = errno; ERR("%s: %s\n", msg, strerror(e)); exit(e); }
+
+
+/* Run a syscall and log to debug*/
+#define LOGCALL(result, call, msg) \
+    LOG_DEBUG(msg);\
+    if((result = call) == -1) \
+    { int e = errno; ERR("%s: %s\n", msg, strerror(e)); exit(e); }
+
 
 #endif

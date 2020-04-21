@@ -5,13 +5,13 @@
 #include <errno.h>
 
 /* From http://www.cse.yorku.ca/~oz/hash.html */
-int hash_fun (const char* word) {
+int hash_fun (const char* word, size_t n) {
     unsigned int hash = 0;
     for (int i = 0 ; word[i] != '\0' ; i++)
     {
         hash = 31*hash + word[i];
     }
-    return hash % 8192;
+    return hash % n;
 }
 
 /* n: number of elements */
@@ -23,7 +23,7 @@ node_t** hash_table_init(size_t n) {
 /* n is the size of the hash table */
 int hash_table_insert_string_nodup(node_t** table, size_t n, char* str) {
     /* Compute hash */
-    unsigned long hash = hash_fun(str);
+    unsigned long hash = hash_fun(str, n);
 
     /* Select list from table */
     node_t* curr = table[hash];

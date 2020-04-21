@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -Wall -pedantic -fPIE -std=gnu99
+CFLAGS = -Wall -fPIE -std=gnu99
 OPTFLAGS = -O3
 INCLUDES = -I.
 LOGLEVEL = -DLOG_LVL=LOG_LVL_NOTICE
